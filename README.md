@@ -61,7 +61,7 @@ In `transact*` use this to queue follow on read keys instead of keys of `v`, the
 
 ``` abap
     ;;;(p/queue! r (into q (remove symbol?) (keys v)))
-       (p/queue! r (into q (remove symbol?) orig-tx))
+       (p/queue! r (into q (remove list?) orig-tx))
 ```
 
 
