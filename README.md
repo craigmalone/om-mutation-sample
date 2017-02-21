@@ -68,8 +68,8 @@ In `transact*` use this to queue follow on read keys instead of keys of `v`, the
 In `transact!` include original `tx` along with `transformed-reads`
 
 ```
- (transact* r x nil transformed-reads tx))
-
+ ;;(transact* r x nil (transform-reads r tx)))
+ (transact* r x nil (transform-reads r tx) tx))
 ```
 
 
