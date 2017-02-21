@@ -25,8 +25,6 @@ connect to Figwheel.
 When you see the line `Successfully compiled "resources/public/app.js" in 21.36
 seconds.`, you're ready to go. Browse to `http://localhost:3449` and enjoy.
 
-**Attention: It is not needed to run `lein figwheel` separately. Instead we
-launch Figwheel directly from the REPL**
 
 ## Testing Mutation-invoked renders
 
@@ -34,26 +32,14 @@ This sample application was used to test what components get re-rendered followi
 
 Each component will output debug to the browser console when being rendered, so look at the console to see what transactions result in which renders.
 
-The cases tested by the application include:
+The case tested by the application is:
 
-a) In a transaction with only a mutation (eg `'[(child1-child2/inc)]`)
-  * the component referenced by the transaction will be rendered, along with any of its children whose properties have been changed.
-  * if the component referenced has an ident, then any other component with the same ident will be re-rendered
-  * Click on `Increment` for "Child1" to see an example of this.
 
-b) In a transaction with a mutation and follow-on read of an ident (eg `' [(child4-sibling-Chris/inc) [:sibling/by-name "Chris"]]`)
-  * as above for a)
-  * in addition, any component with the ident in the follow-on read will be rendered, along with any of its children whose properties have been changed.
-  * click on the `Increment` for any of the "Sibling" components to see an example of this.
-  * Note: "Sibling - Harry" appears twice, so clicking on any of these will update/render the other.
-
-c) In a transaction with a mutation and a follow-on read of a keyword (eg `' [(child1-child2/inc) :child1/name]`)
+In a transaction with a mutation and a follow-on read of a keyword (eg `' [(child1-child2/inc) :child1/name]`)
   * the Root component will be rendered, along with any children in the component tree whose properties have been modified.
-  * click on the `Increment` for "Child2" or "Child3" or "Child5" to see an example of this.
+  * click on the `Increment` for "Child2" to see an example of this.
 
-
-
-Although c) works fine, I was expecting the same optimizations as in a) and b) in that the rendering would only be performed on the components explicitly referenced by the transaction and follow-on reads.
+Although this works fine, I was expecting the same optimizations as when transacting with an ident in the follow on read,  in that the rendering would only be performed on the components explicitly referenced by the transaction and follow-on reads.
 
 ## Example change to om/next.cljc
 
@@ -93,8 +79,6 @@ In `transact!` include original `tx` along with `transformed-reads`
 With these changes, clicking `Increment` for the following components results in:
 
 * Child2: only rendered Child2 (component of the transaction) and Child1 (component that queries `:child1/name`)
-* Child3: only rendered Child3 (component of the transaction) and Child1 (component that queries `:child1/name`)
-* Child5: only rendered Child1 and Child2 (components that query `:common\age`) and Child3 (component that queires `:child3\name`)
 
 ## License
 
